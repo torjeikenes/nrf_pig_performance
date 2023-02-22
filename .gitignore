@@ -1,0 +1,3 @@
+nRF5_SDK*/**
+.vscode/**
+_build
