@@ -66,6 +66,8 @@
 #include "bsp.h"
 #include "bsp_btn_ble.h"
 
+#include "mpu6050_dvr.h"
+
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0 /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
 
 #if (NRF_SD_BLE_API_VERSION == 3)
@@ -589,11 +591,11 @@ static void buttons_leds_init(bool *p_erase_bonds)
 
 /**@brief Function for placing the application in low power state while waiting for events.
  */
-static void power_manage(void)
-{
-    uint32_t err_code = sd_app_evt_wait();
-    APP_ERROR_CHECK(err_code);
-}
+// static void power_manage(void)
+//{
+//     uint32_t err_code = sd_app_evt_wait();
+//     APP_ERROR_CHECK(err_code);
+// }
 
 /**@brief Application main function.
  */
@@ -617,11 +619,59 @@ int main(void)
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
-    // Enter main loop.
-    for (;;)
+    // create arrays which will hold x,y & z co-ordinates values of acc and gyro
+    static int16_t AccValue[3], GyroValue[3];
+
+    twi_master_init();  // initialize the twi
+    nrf_delay_ms(1000); // give some delay
+
+    while (mpu6050_init() == false) // wait until MPU6050 sensor is successfully initialized
     {
-        power_manage();
+        // NRF_LOG_INFO("MPU_6050 initialization failed!!!"); // if it failed to initialize then print a message
+        nrf_delay_ms(1000);
     }
+
+    // NRF_LOG_INFO("MPU6050 Init Successfully!!!");
+    printf("\r\nMPU6050 init successfully!\r\n");
+
+    // NRF_LOG_INFO("Reading Values from ACC & GYRO"); // display a message to let the user know that the device is starting to read the values
+    nrf_delay_ms(2000);
+
+    while (true)
+    {
+        if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true) // Read acc value from mpu6050 internal registers and save them in the array
+        {
+            // NRF_LOG_INFO("ACC Values:  x = %d  y = %d  z = %d", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+            // printf("ACC Values:  x = %d  y = %d  z = %d\r\n", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+            printf("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+        }
+        else
+        {
+            // NRF_LOG_INFO("Reading ACC values Failed!!!"); // if reading was unsuccessful then let the user know about it
+        }
+
+        if (MPU6050_ReadGyro(&GyroValue[0], &GyroValue[1], &GyroValue[2]) == true) // read the gyro values from mpu6050's internal registers and save them in another array
+        {
+            // NRF_LOG_INFO("GYRO Values: x = %d  y = %d  z = %d", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
+            // printf("GYRO Values: x = %d  y = %d  z = %d\r\n", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
+            printf("%d, %d, %d\r\n", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
+        }
+
+        else
+        {
+            // NRF_LOG_INFO("Reading GYRO values Failed!!!");
+        }
+
+        nrf_delay_ms(100); // give some delay
+    }
+
+    /*
+        // Enter main loop.
+        for (;;)
+        {
+            power_manage();
+        }
+        */
 }
 
 /**
