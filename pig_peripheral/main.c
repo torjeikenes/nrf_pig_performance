@@ -66,6 +66,10 @@
 #include "bsp.h"
 #include "bsp_btn_ble.h"
 #include "nrf_drv_gpiote.h"
+#include "app_error.h"
+#define NRF_LOG_MODULE_NAME "APP"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 #include "mpu6050_dvr.h"
 
@@ -524,6 +528,7 @@ void uart_event_handle(app_uart_evt_t *p_event)
 /**@brief  Function for initializing the UART module.
  */
 /**@snippet [UART Initialization] */
+/*
 static void uart_init(void)
 {
     uint32_t err_code;
@@ -545,6 +550,7 @@ static void uart_init(void)
                        err_code);
     APP_ERROR_CHECK(err_code);
 }
+*/
 /**@snippet [UART Initialization] */
 
 /**@brief Function for initializing the Advertising functionality.
@@ -636,9 +642,12 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
+    APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
+    NRF_LOG_INFO("Log init\r\n");
+
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
-    uart_init();
+    // uart_init();
 
     buttons_leds_init(&erase_bonds);
     ble_stack_init();
@@ -647,7 +656,7 @@ int main(void)
     advertising_init();
     conn_params_init();
 
-    printf("\r\nUART Start!\r\n");
+    NRF_LOG_INFO("UART Start!\r\n");
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
@@ -663,12 +672,10 @@ int main(void)
         nrf_delay_ms(1000);
     }
 
+    NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
     gpiote_setup();
 
-    // NRF_LOG_INFO("MPU6050 Init Successfully!!!");
-    printf("\r\nMPU6050 init successfully!\r\n");
-
-    // NRF_LOG_INFO("Reading Values from ACC & GYRO"); // display a message to let the user know that the device is starting to read the values
+    NRF_LOG_INFO("Reading Values from ACC & GYRO\r\n"); // display a message to let the user know that the device is starting to read the values
     nrf_delay_ms(2000);
 
     // Enter main loop.
@@ -680,7 +687,7 @@ int main(void)
         {
             if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true)
             {
-                printf("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+                NRF_LOG_INFO("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
             }
         }
     }
