@@ -65,6 +65,7 @@
 #include "app_util_platform.h"
 #include "bsp.h"
 #include "bsp_btn_ble.h"
+#include "nrf_drv_gpiote.h"
 
 #include "mpu6050_dvr.h"
 
@@ -587,6 +588,17 @@ static void buttons_leds_init(bool *p_erase_bonds)
     APP_ERROR_CHECK(err_code);
 
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
+}
+
+/**
+ * @brief Simple interrupt handler setting a flag indicating that data is ready
+ *
+ */
+void int_pin_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+{
+    // A rule of thumb is to do as little as possible in an interrupt routine.
+    // Therefor we just set a flag like this, and check the flag in the main loop.
+    mpu_data_ready = true;
 }
 
 /**@brief Function for placing the application in low power state while waiting for events.
