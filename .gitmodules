@@ -1,3 +1,0 @@
-[submodule "pig_peripheral/nrf5-mpu-examples"]
-	path = pig_peripheral/nrf5-mpu-examples
-	url = https://github.com/Martinsbl/nrf5-mpu-examples
