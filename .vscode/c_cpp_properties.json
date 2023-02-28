@@ -1,0 +1,32 @@
+{
+     "env": {
+        "GNU_GCC": "/opt/gcc-arm-none-eabi"
+    },
+    "configurations": [
+        {
+            "name": "NRF51 dk",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:GNU_GCC}/arm-none-eabi/include"
+            ],
+            "defines": [
+                "BOARD_PCA10028",
+                "SOFTDEVICE_PRESENT",
+                "CONFIG_GPIO_AS_PINRESET",
+                "INITIALIZE_USER_SECTIONS",
+                "FLOAT_ABI_HARD",
+                "NRF51",
+                "S130",
+                "BLE_STACK_SUPPORT_REQD",
+                "SWI_DISABLE0",
+                "NRF51422",
+                "NRF_SD_BLE_API_VERSION=2"
+            ],
+            "compilerPath": "${env:GNU_GCC}/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm"
+        }
+    ],
+    "version": 4
+}

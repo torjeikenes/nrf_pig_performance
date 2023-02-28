@@ -1,0 +1,86 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "command": "make",
+            "args": [
+                "VERBOSE=1"
+            ],
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "clean",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "flash",
+            "type": "shell",
+            "command": "make flash",
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "flash_softdevice",
+            "type": "shell",
+            "command": "make flash_softdevice",
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "sdk_config",
+            "type": "shell",
+            "command": "make sdk_config",
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "serial",
+            "type": "shell",
+            "command": "screen /dev/ttyACM0 115200",
+            "problemMatcher": []
+        },
+        {
+            "label": "erase",
+            "type": "shell",
+            "command": "make erase",
+            "options": {
+                // This path should point the Makefile location
+                "cwd": "${workspaceFolder}/pig_peripheral/pca10028/s130/armgcc"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
