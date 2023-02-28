@@ -190,7 +190,7 @@ bool mpu6050_init(void)
   (void)mpu6050_register_write(MPU_MOTION_DET_CTRL_REG, 0x15); // //to register 0x69, write the motion detection decrement and a few other settings (for example write 0x15 to set both free-fall and motion decrements to 1 and accelerometer start-up delay to 5ms total by adding 1ms. )
   (void)mpu6050_register_write(MPU_INT_EN_REG, 0x40);          // Enable motion interrupt
 
-  return transfer_succeeded
+  return transfer_succeeded;
 }
 
 /*

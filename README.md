@@ -16,11 +16,16 @@ I had some problems with 12.2, so I use version 11.3.1 (as of 28/2/23)
 `curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_TOOLCHAIN_VERSION}/binrel/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz"`
 
 `sudo mkdir /opt/gcc-arm-none-eabi`
+
 `sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi`
 
 Add `export PATH=$PATH:/opt/gcc-arm-none-eabi/bin` to `.bashrc` or `.zshrc`
 
 Open `<SDK_ROOT>/components/toolchain/gcc/Makefile.posix` and set the correct path
+
+### Install nrf command line tools
+
+https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
 
 ## Build
 

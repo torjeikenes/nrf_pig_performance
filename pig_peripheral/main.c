@@ -102,10 +102,14 @@
 #define UART_TX_BUF_SIZE 256 /**< UART TX buffer size. */
 #define UART_RX_BUF_SIZE 256 /**< UART RX buffer size. */
 
+#define MPU_INT_PIN 12
+
 static ble_nus_t m_nus;                                  /**< Structure to identify the Nordic UART Service. */
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID; /**< Handle of the current connection. */
 
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_NUS_SERVICE, NUS_SERVICE_UUID_TYPE}}; /**< Universally unique service identifier. */
+
+volatile bool mpu_data_ready = false;
 
 /**@brief Function for assert macro callback.
  *
@@ -601,13 +605,29 @@ void int_pin_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
     mpu_data_ready = true;
 }
 
+static void gpiote_setup(void)
+{
+    uint32_t err_code;
+
+    err_code = nrf_drv_gpiote_init();
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
+    in_config.pull = NRF_GPIO_PIN_PULLUP;
+
+    err_code = nrf_drv_gpiote_in_init(MPU_INT_PIN, &in_config, int_pin_handler);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_gpiote_in_event_enable(MPU_INT_PIN, true);
+}
+
 /**@brief Function for placing the application in low power state while waiting for events.
  */
-// static void power_manage(void)
-//{
-//     uint32_t err_code = sd_app_evt_wait();
-//     APP_ERROR_CHECK(err_code);
-// }
+static void power_manage(void)
+{
+    uint32_t err_code = sd_app_evt_wait();
+    APP_ERROR_CHECK(err_code);
+}
 
 /**@brief Application main function.
  */
@@ -632,7 +652,7 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
     // create arrays which will hold x,y & z co-ordinates values of acc and gyro
-    static int16_t AccValue[3], GyroValue[3];
+    static int16_t AccValue[3]; //, GyroValue[3];
 
     twi_master_init();  // initialize the twi
     nrf_delay_ms(1000); // give some delay
@@ -643,12 +663,28 @@ int main(void)
         nrf_delay_ms(1000);
     }
 
+    gpiote_setup();
+
     // NRF_LOG_INFO("MPU6050 Init Successfully!!!");
     printf("\r\nMPU6050 init successfully!\r\n");
 
     // NRF_LOG_INFO("Reading Values from ACC & GYRO"); // display a message to let the user know that the device is starting to read the values
     nrf_delay_ms(2000);
 
+    // Enter main loop.
+    for (;;)
+    {
+        power_manage();
+
+        if (mpu_data_ready)
+        {
+            if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true)
+            {
+                printf("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+            }
+        }
+    }
+    /*
     while (true)
     {
         if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true) // Read acc value from mpu6050 internal registers and save them in the array
@@ -676,14 +712,7 @@ int main(void)
 
         nrf_delay_ms(100); // give some delay
     }
-
-    /*
-        // Enter main loop.
-        for (;;)
-        {
-            power_manage();
-        }
-        */
+    */
 }
 
 /**
