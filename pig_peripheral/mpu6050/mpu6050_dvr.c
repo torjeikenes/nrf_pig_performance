@@ -183,14 +183,18 @@ bool mpu6050_init(void)
   (void)mpu6050_register_write(MPU_GYRO_CFG_REG, 0x18);  // 0x18-> fsel=3 -> 2000 deg/s
   (void)mpu6050_register_write(MPU_ACCEL_CFG_REG, 0x00); // fsel = 0 -> 2g
 
-  (void)mpu6050_register_write(MPU_INTBP_CFG_REG, 0x20);       // LATCH_INT_EN
-  (void)mpu6050_register_write(MPU_ACCEL_CFG_REG, 0x01);       // HPF = 5Hz
-  (void)mpu6050_register_write(MPU_MOTION_DET_THR_REG, 20);    // Threshold 20
-  (void)mpu6050_register_write(MPU_MOTION_DET_DUR_REG, 40);    //
-  (void)mpu6050_register_write(MPU_MOTION_DET_CTRL_REG, 0x15); // //to register 0x69, write the motion detection decrement and a few other settings (for example write 0x15 to set both free-fall and motion decrements to 1 and accelerometer start-up delay to 5ms total by adding 1ms. )
-  (void)mpu6050_register_write(MPU_INT_EN_REG, 0x40);          // Enable motion interrupt
-
   return transfer_succeeded;
+}
+
+void mpu6050_motion_detection_init(uint8_t threshold, uint8_t duration)
+{
+  // Setup motion detection and interrupt
+  (void)mpu6050_register_write(MPU_INTBP_CFG_REG, 0x20);           // LATCH_INT_EN
+  (void)mpu6050_register_write(MPU_ACCEL_CFG_REG, 0x01);           // HPF = 5Hz
+  (void)mpu6050_register_write(MPU_MOTION_DET_THR_REG, threshold); //
+  (void)mpu6050_register_write(MPU_MOTION_DET_DUR_REG, duration);  //
+  (void)mpu6050_register_write(MPU_MOTION_DET_CTRL_REG, 0x15);     // //to register 0x69, write the motion detection decrement and a few other settings (for example write 0x15 to set both free-fall and motion decrements to 1 and accelerometer start-up delay to 5ms total by adding 1ms. )
+  (void)mpu6050_register_write(MPU_INT_EN_REG, 0x40);              // Enable motion interrupt
 }
 
 /*

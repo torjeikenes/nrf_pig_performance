@@ -66,8 +66,9 @@
 #define MPU_FIFO_RW_REG 0x74
 #define MPU_DEVICE_ID_REG 0x75
 
-void twi_master_init(void); // initialize the twi communication
-bool mpu6050_init(void);    // initialize the mpu6050
+void twi_master_init(void);                                              // initialize the twi communication
+bool mpu6050_init(void);                                                 // initialize the mpu6050
+void mpu6050_motion_detection_init(uint8_t threshold, uint8_t duration); // setup motion detection
 
 /**
   @brief Function for writing a MPU6050 register contents over TWI.
