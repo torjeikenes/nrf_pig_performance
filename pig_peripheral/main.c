@@ -66,6 +66,10 @@
 #include "bsp.h"
 #include "bsp_btn_ble.h"
 #include "nrf_drv_gpiote.h"
+#include "app_error.h"
+#define NRF_LOG_MODULE_NAME "APP"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 #include "mpu6050_dvr.h"
 
@@ -483,6 +487,7 @@ void bsp_event_handler(bsp_event_t event)
  *          @ref NUS_MAX_DATA_LENGTH.
  */
 /**@snippet [Handling the data received over UART] */
+/*
 void uart_event_handle(app_uart_evt_t *p_event)
 {
     static uint8_t data_array[BLE_NUS_MAX_DATA_LEN];
@@ -519,11 +524,13 @@ void uart_event_handle(app_uart_evt_t *p_event)
         break;
     }
 }
+*/
 /**@snippet [Handling the data received over UART] */
 
 /**@brief  Function for initializing the UART module.
  */
 /**@snippet [UART Initialization] */
+/*
 static void uart_init(void)
 {
     uint32_t err_code;
@@ -545,6 +552,7 @@ static void uart_init(void)
                        err_code);
     APP_ERROR_CHECK(err_code);
 }
+*/
 /**@snippet [UART Initialization] */
 
 /**@brief Function for initializing the Advertising functionality.
@@ -583,11 +591,13 @@ static void buttons_leds_init(bool *p_erase_bonds)
 {
     bsp_event_t startup_event;
 
+    NRF_LOG_INFO("bsp init!\r\n");
     uint32_t err_code = bsp_init(BSP_INIT_LED | BSP_INIT_BUTTONS,
                                  APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),
                                  bsp_event_handler);
     APP_ERROR_CHECK(err_code);
 
+    NRF_LOG_INFO("bsp ble!\r\n");
     err_code = bsp_btn_ble_init(NULL, &startup_event);
     APP_ERROR_CHECK(err_code);
 
@@ -609,10 +619,13 @@ static void gpiote_setup(void)
 {
     uint32_t err_code;
 
-    err_code = nrf_drv_gpiote_init();
-    APP_ERROR_CHECK(err_code);
+    if (!nrf_drv_gpiote_is_init())
+    {
+        err_code = nrf_drv_gpiote_init();
+        APP_ERROR_CHECK(err_code);
+    }
 
-    nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_TOGGLE(true);
+    nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_LOTOHI(true);
     in_config.pull = NRF_GPIO_PIN_PULLUP;
 
     err_code = nrf_drv_gpiote_in_init(MPU_INT_PIN, &in_config, int_pin_handler);
@@ -636,9 +649,12 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
+    APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
+    NRF_LOG_INFO("Log init\r\n");
+
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
-    uart_init();
+    // uart_init();
 
     buttons_leds_init(&erase_bonds);
     ble_stack_init();
@@ -646,8 +662,9 @@ int main(void)
     services_init();
     advertising_init();
     conn_params_init();
+    NRF_LOG_INFO("Test!\r\n");
 
-    printf("\r\nUART Start!\r\n");
+    NRF_LOG_INFO("UART Start!\r\n");
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
@@ -663,13 +680,16 @@ int main(void)
         nrf_delay_ms(1000);
     }
 
+    NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
     gpiote_setup();
 
-    // NRF_LOG_INFO("MPU6050 Init Successfully!!!");
-    printf("\r\nMPU6050 init successfully!\r\n");
-
-    // NRF_LOG_INFO("Reading Values from ACC & GYRO"); // display a message to let the user know that the device is starting to read the values
-    nrf_delay_ms(2000);
+    NRF_LOG_INFO("Reading Values from ACC & GYRO\r\n"); // display a message to let the user know that the device is starting to read the values
+    // nrf_delay_ms(2000);
+    uint8_t status;
+    if (mpu6050_register_read(0x3A, &status, 1))
+    {
+        NRF_LOG_INFO("Interrupt status: %x\r\n", status);
+    }
 
     // Enter main loop.
     for (;;)
@@ -678,10 +698,17 @@ int main(void)
 
         if (mpu_data_ready)
         {
+            NRF_LOG_INFO("Data ready!\r\n"); // display a message to let the user know that the device is starting to read the values
+            if (mpu6050_register_read(0x3A, &status, 1))
+            {
+                NRF_LOG_INFO("Interrupt status: %x\r\n", status);
+            }
+
             if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true)
             {
-                printf("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
+                NRF_LOG_INFO("ACC Values:%d, %d, %d\r\n", AccValue[0], AccValue[1], AccValue[2]); // display the read values
             }
+            mpu_data_ready = false;
         }
     }
     /*
