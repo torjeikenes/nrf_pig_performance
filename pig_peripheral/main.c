@@ -698,7 +698,6 @@ int main(void)
 
         if (mpu_data_ready)
         {
-            NRF_LOG_INFO("Data ready!\r\n"); // display a message to let the user know that the device is starting to read the values
             if (mpu6050_register_read(0x3A, &status, 1))
             {
                 NRF_LOG_INFO("Interrupt status: %x\r\n", status);
@@ -706,6 +705,12 @@ int main(void)
 
             if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true)
             {
+
+                err_code = ble_nus_string_send(&m_nus, (uint8_t *)AccValue, sizeof(AccValue));
+                if (err_code != NRF_ERROR_INVALID_STATE)
+                {
+                    APP_ERROR_CHECK(err_code);
+                }
                 NRF_LOG_INFO("ACC Values:%d, %d, %d\r\n", AccValue[0], AccValue[1], AccValue[2]); // display the read values
             }
             mpu_data_ready = false;
