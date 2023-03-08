@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>/home/torje/github/nrf_pig_performance/nrf_peripheral_pcb/nrf_peripheral_pcb.kicad_sch</source>
-    <date>2023-03-02T15:32:10 CET</date>
+    <date>2023-03-08T09:40:20 CET</date>
     <tool>Eeschema 6.0.11-2627ca5db0~126~ubuntu22.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -27,7 +27,13 @@
     <comp ref="BT1">
       <value>Battery_Cell</value>
       <footprint>Battery:BatteryHolder_Keystone_3002_1x2032</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/w/c/batteries-chargers/battery-holders/prl/resultater?battery-sizes-accepted=2032&amp;sort=P_PRICE</field>
+        <field name="Price">2.64</field>
+      </fields>
       <libsource lib="Device" part="Battery_Cell" description="Single-cell battery"/>
+      <property name="Link" value="https://no.farnell.com/w/c/batteries-chargers/battery-holders/prl/resultater?battery-sizes-accepted=2032&amp;sort=P_PRICE"/>
+      <property name="Price" value="2.64"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -36,7 +42,13 @@
     <comp ref="C1">
       <value>12pF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp/mc0603n120j500ct/cap-12pf-50v-5-c0g-np0-0603/dp/https://no.farnell.com/multicomp/mc0402n120j500ct/cap-12pf-50v-5-c0g-np0-0402/dp/1758943</field>
+        <field name="Price">0.06</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp/mc0603n120j500ct/cap-12pf-50v-5-c0g-np0-0603/dp/https://no.farnell.com/multicomp/mc0402n120j500ct/cap-12pf-50v-5-c0g-np0-0402/dp/1758943"/>
+      <property name="Price" value="0.06"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -45,7 +57,13 @@
     <comp ref="C2">
       <value>12pF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp/mc0603n120j500ct/cap-12pf-50v-5-c0g-np0-0603/dp/https://no.farnell.com/multicomp/mc0402n120j500ct/cap-12pf-50v-5-c0g-np0-0402/dp/1758943</field>
+        <field name="Price">0.06</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp/mc0603n120j500ct/cap-12pf-50v-5-c0g-np0-0603/dp/https://no.farnell.com/multicomp/mc0402n120j500ct/cap-12pf-50v-5-c0g-np0-0402/dp/1758943"/>
+      <property name="Price" value="0.06"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -54,7 +72,13 @@
     <comp ref="C3">
       <value>0.8pF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/murata/gjm1555c1hr80wb01d/cap-0-8pf-50v-c0g-np0-0402/dp/2781448</field>
+        <field name="Price">0.325</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/murata/gjm1555c1hr80wb01d/cap-0-8pf-50v-c0g-np0-0402/dp/2781448"/>
+      <property name="Price" value="0.325"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -63,7 +87,13 @@
     <comp ref="C4">
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433</field>
+        <field name="Price">0.032</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433"/>
+      <property name="Price" value="0.032"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -72,7 +102,13 @@
     <comp ref="C5">
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433</field>
+        <field name="Price">0.032</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433"/>
+      <property name="Price" value="0.032"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -81,7 +117,13 @@
     <comp ref="C7">
       <value>100pF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp/mc0402b101k500ct/cap-100pf-50v-10-x7r-0402-reel/dp/2408537</field>
+        <field name="Price">0.032</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp/mc0402b101k500ct/cap-100pf-50v-10-x7r-0402-reel/dp/2408537"/>
+      <property name="Price" value="0.032"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -90,7 +132,13 @@
     <comp ref="C8">
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433</field>
+        <field name="Price">0.032</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0402krx5r6bb104/cap-0-1uf-10v-mlcc-0402/dp/3366433"/>
+      <property name="Price" value="0.032"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -99,7 +147,13 @@
     <comp ref="C9">
       <value>4.7uF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0603mrx5r5bb475/cap-4-7uf-6-3v-mlcc-0603/dp/3366552</field>
+        <field name="Price">0.219</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0603mrx5r5bb475/cap-4-7uf-6-3v-mlcc-0603/dp/3366552"/>
+      <property name="Price" value="0.219"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -108,7 +162,13 @@
     <comp ref="C10">
       <value>1.0uF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp-pro/mc0603f105z100ct/cap-1-f-10v-y5v-0603/dp/2629500</field>
+        <field name="Price">0.062</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp-pro/mc0603f105z100ct/cap-1-f-10v-y5v-0603/dp/2629500"/>
+      <property name="Price" value="0.062"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -117,7 +177,13 @@
     <comp ref="C11">
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/murata/grm188r60j106ke47d/cap-10-f-6-3v-10-x5r-0603/dp/2666488</field>
+        <field name="Price">0.182</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/murata/grm188r60j106ke47d/cap-10-f-6-3v-10-x5r-0603/dp/2666488"/>
+      <property name="Price" value="0.182"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -126,7 +192,13 @@
     <comp ref="C12">
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0603zry5v8bb104/cap-0-1uf-25v-mlcc-0603/dp/3366557</field>
+        <field name="Price">0.065</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0603zry5v8bb104/cap-0-1uf-25v-mlcc-0603/dp/3366557"/>
+      <property name="Price" value="0.065"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -135,7 +207,13 @@
     <comp ref="C14">
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/yageo/cc0603zry5v8bb104/cap-0-1uf-25v-mlcc-0603/dp/3366557</field>
+        <field name="Price">0.065</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/yageo/cc0603zry5v8bb104/cap-0-1uf-25v-mlcc-0603/dp/3366557"/>
+      <property name="Price" value="0.065"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -144,7 +222,13 @@
     <comp ref="C15">
       <value>1.0uF</value>
       <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp-pro/mc0603f105z100ct/cap-1-f-10v-y5v-0603/dp/2629500</field>
+        <field name="Price">0.062</field>
+      </fields>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp-pro/mc0603f105z100ct/cap-1-f-10v-y5v-0603/dp/2629500"/>
+      <property name="Price" value="0.062"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -153,7 +237,11 @@
     <comp ref="JSWD1">
       <value>Conn_01x04_Female</value>
       <footprint>Connector_PinHeader_1.27mm:PinHeader_1x04_P1.27mm_Horizontal</footprint>
+      <fields>
+        <field name="Price">0</field>
+      </fields>
       <libsource lib="Connector" part="Conn_01x04_Female" description="Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Price" value="0"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -162,7 +250,13 @@
     <comp ref="L1">
       <value>3.9nH</value>
       <footprint>Inductor_SMD:L_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/murata/lqg15hs3n9s02d/inductor-3-9nh-0-75a-0402-multilayer/dp/2840119</field>
+        <field name="Price">0.217</field>
+      </fields>
       <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="Link" value="https://no.farnell.com/murata/lqg15hs3n9s02d/inductor-3-9nh-0-75a-0402-multilayer/dp/2840119"/>
+      <property name="Price" value="0.217"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -171,7 +265,13 @@
     <comp ref="L2">
       <value>10uH</value>
       <footprint>Inductor_SMD:L_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/tdk/mlz1608m100wt/inductor-10uh-20-shielded/dp/2215635</field>
+        <field name="Price">0.559</field>
+      </fields>
       <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="Link" value="https://no.farnell.com/tdk/mlz1608m100wt/inductor-10uh-20-shielded/dp/2215635"/>
+      <property name="Price" value="0.559"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -180,7 +280,13 @@
     <comp ref="L3">
       <value>15nH</value>
       <footprint>Inductor_SMD:L_0402_1005Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/murata/lqg15hs15nj02d/inductor-15nh-0-45a-0402-multilayer/dp/2840112</field>
+        <field name="Price">0.217</field>
+      </fields>
       <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="Link" value="https://no.farnell.com/murata/lqg15hs15nj02d/inductor-15nh-0-45a-0402-multilayer/dp/2840112"/>
+      <property name="Price" value="0.217"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -189,7 +295,13 @@
     <comp ref="R1">
       <value>10k</value>
       <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp/mcmr06x103-jtl/res-10k-5-0-1w-0603-ceramic/dp/2073356</field>
+        <field name="Price">0.031</field>
+      </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp/mcmr06x103-jtl/res-10k-5-0-1w-0603-ceramic/dp/2073356"/>
+      <property name="Price" value="0.031"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -198,7 +310,13 @@
     <comp ref="R2">
       <value>10k</value>
       <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/multicomp/mcmr06x103-jtl/res-10k-5-0-1w-0603-ceramic/dp/2073356</field>
+        <field name="Price">0.031</field>
+      </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Link" value="https://no.farnell.com/multicomp/mcmr06x103-jtl/res-10k-5-0-1w-0603-ceramic/dp/2073356"/>
+      <property name="Price" value="0.031"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -208,7 +326,13 @@
       <value>nRF52810-QCxx</value>
       <footprint>Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.6x3.6mm</footprint>
       <datasheet>http://infocenter.nordicsemi.com/pdf/nRF52810_PS_v1.1.pdf</datasheet>
+      <fields>
+        <field name="Link">https://no.mouser.com/ProductDetail/Nordic-Semiconductor/NRF52810-QCAA-R7?qs=5aG0NVq1C4yRsJgd1EoNQw%3D%3D</field>
+        <field name="Price">17.76</field>
+      </fields>
       <libsource lib="MCU_Nordic" part="nRF52810-QCxx" description="Multiprotocol BLE/2.4GHz Cortex-M4 SoC, QFN-32"/>
+      <property name="Link" value="https://no.mouser.com/ProductDetail/Nordic-Semiconductor/NRF52810-QCAA-R7?qs=5aG0NVq1C4yRsJgd1EoNQw%3D%3D"/>
+      <property name="Price" value="17.76"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -218,7 +342,13 @@
       <value>LIS2HH12</value>
       <footprint>Package_LGA:LGA-12_2x2mm_P0.5mm</footprint>
       <datasheet>www.st.com/resource/en/datasheet/lis2hh12.pdf</datasheet>
+      <fields>
+        <field name="Link">https://no.mouser.com/ProductDetail/STMicroelectronics/LIS2HH12TR?qs=%2FyPOVIzmEE34aMMKbW6Cmg%3D%3D</field>
+        <field name="Price">10.10</field>
+      </fields>
       <libsource lib="Sensor_Motion" part="LIS2HH12" description="3-Axis Accelerometer, 2/4/8g range, I2C/SPI interface"/>
+      <property name="Link" value="https://no.mouser.com/ProductDetail/STMicroelectronics/LIS2HH12TR?qs=%2FyPOVIzmEE34aMMKbW6Cmg%3D%3D"/>
+      <property name="Price" value="10.10"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -227,7 +357,13 @@
     <comp ref="X1">
       <value>32MHz</value>
       <footprint>Crystal:Crystal_SMD_2016-4Pin_2.0x1.6mm</footprint>
+      <fields>
+        <field name="Link">https://no.farnell.com/murata/xrcgb32m000f2p00r0/crystal-32mhz-6pf-2-x-1-6mm/dp/2455839</field>
+        <field name="Price">1.8</field>
+      </fields>
       <libsource lib="Device" part="Crystal" description="Two pin crystal"/>
+      <property name="Link" value="https://no.farnell.com/murata/xrcgb32m000f2p00r0/crystal-32mhz-6pf-2-x-1-6mm/dp/2455839"/>
+      <property name="Price" value="1.8"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="nrf_peripheral_pcb.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -452,49 +588,49 @@
       <node ref="U1" pin="6" pinfunction="P0.06" pintype="bidirectional"/>
       <node ref="U2" pin="12" pinfunction="INT1" pintype="output"/>
     </net>
-    <net code="3" name="Net-(C4-Pad1)">
-      <node ref="C4" pin="1" pintype="passive"/>
-      <node ref="U1" pin="1" pinfunction="DEC1" pintype="passive"/>
+    <net code="3" name="Net-(C1-Pad2)">
+      <node ref="C1" pin="2" pintype="passive"/>
+      <node ref="U1" pin="23" pinfunction="XC1" pintype="input"/>
+      <node ref="X1" pin="2" pinfunction="2" pintype="passive"/>
     </net>
-    <net code="4" name="Net-(C7-Pad2)">
-      <node ref="C7" pin="2" pintype="passive"/>
-      <node ref="U1" pin="22" pinfunction="DEC3" pintype="passive"/>
-    </net>
-    <net code="5" name="Net-(JSWD1-Pad2)">
-      <node ref="JSWD1" pin="2" pinfunction="Pin_2" pintype="passive"/>
-      <node ref="U1" pin="18" pinfunction="SWDIO" pintype="bidirectional"/>
-    </net>
-    <net code="6" name="Net-(JSWD1-Pad3)">
-      <node ref="JSWD1" pin="3" pinfunction="Pin_3" pintype="passive"/>
-      <node ref="U1" pin="17" pinfunction="SWDCLK" pintype="input"/>
-    </net>
-    <net code="7" name="Net-(L1-Pad2)">
-      <node ref="C3" pin="1" pintype="passive"/>
-      <node ref="L1" pin="2" pinfunction="2" pintype="passive"/>
-      <node ref="U1" pin="19" pinfunction="ANT" pintype="passive"/>
-    </net>
-    <net code="8" name="Net-(L2-Pad2)">
-      <node ref="L2" pin="2" pinfunction="2" pintype="passive"/>
-      <node ref="U1" pin="31" pinfunction="DCC" pintype="power_out"/>
-    </net>
-    <net code="9" name="Net-(L3-Pad1)">
-      <node ref="C10" pin="1" pintype="passive"/>
-      <node ref="L3" pin="1" pinfunction="1" pintype="passive"/>
-      <node ref="U1" pin="30" pinfunction="DEC4" pintype="passive"/>
-    </net>
-    <net code="10" name="Net-(L3-Pad2)">
-      <node ref="L2" pin="1" pinfunction="1" pintype="passive"/>
-      <node ref="L3" pin="2" pinfunction="2" pintype="passive"/>
-    </net>
-    <net code="11" name="Net-(X1-Pad1)">
+    <net code="4" name="Net-(C2-Pad2)">
       <node ref="C2" pin="2" pintype="passive"/>
       <node ref="U1" pin="24" pinfunction="XC2" pintype="input"/>
       <node ref="X1" pin="1" pinfunction="1" pintype="passive"/>
     </net>
-    <net code="12" name="Net-(X1-Pad2)">
-      <node ref="C1" pin="2" pintype="passive"/>
-      <node ref="U1" pin="23" pinfunction="XC1" pintype="input"/>
-      <node ref="X1" pin="2" pinfunction="2" pintype="passive"/>
+    <net code="5" name="Net-(C3-Pad1)">
+      <node ref="C3" pin="1" pintype="passive"/>
+      <node ref="L1" pin="2" pinfunction="2" pintype="passive"/>
+      <node ref="U1" pin="19" pinfunction="ANT" pintype="passive"/>
+    </net>
+    <net code="6" name="Net-(C4-Pad1)">
+      <node ref="C4" pin="1" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="DEC1" pintype="passive"/>
+    </net>
+    <net code="7" name="Net-(C7-Pad2)">
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="U1" pin="22" pinfunction="DEC3" pintype="passive"/>
+    </net>
+    <net code="8" name="Net-(C10-Pad1)">
+      <node ref="C10" pin="1" pintype="passive"/>
+      <node ref="L3" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="U1" pin="30" pinfunction="DEC4" pintype="passive"/>
+    </net>
+    <net code="9" name="Net-(JSWD1-Pad2)">
+      <node ref="JSWD1" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="U1" pin="18" pinfunction="SWDIO" pintype="bidirectional"/>
+    </net>
+    <net code="10" name="Net-(JSWD1-Pad3)">
+      <node ref="JSWD1" pin="3" pinfunction="Pin_3" pintype="passive"/>
+      <node ref="U1" pin="17" pinfunction="SWDCLK" pintype="input"/>
+    </net>
+    <net code="11" name="Net-(L2-Pad1)">
+      <node ref="L2" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="L3" pin="2" pinfunction="2" pintype="passive"/>
+    </net>
+    <net code="12" name="Net-(L2-Pad2)">
+      <node ref="L2" pin="2" pinfunction="2" pintype="passive"/>
+      <node ref="U1" pin="31" pinfunction="DCC" pintype="power_out"/>
     </net>
     <net code="13" name="SCL">
       <node ref="U1" pin="8" pinfunction="P0.10" pintype="bidirectional"/>
