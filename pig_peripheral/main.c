@@ -108,6 +108,8 @@
 
 #define MPU_INT_PIN 12
 
+#define ACCEL_ARRAY_SIZE 100
+
 static ble_nus_t m_nus;                                  /**< Structure to identify the Nordic UART Service. */
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID; /**< Handle of the current connection. */
 
@@ -613,6 +615,7 @@ void int_pin_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
     // A rule of thumb is to do as little as possible in an interrupt routine.
     // Therefor we just set a flag like this, and check the flag in the main loop.
     mpu_data_ready = true;
+    NRF_LOG_INFO("Int");
 }
 
 static void gpiote_setup(void)
@@ -669,7 +672,7 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
     // create arrays which will hold x,y & z co-ordinates values of acc and gyro
-    static int16_t AccValue[3]; //, GyroValue[3];
+    static int16_t acc_value[3]; //, GyroValue[3];
 
     twi_master_init();  // initialize the twi
     nrf_delay_ms(1000); // give some delay
@@ -692,6 +695,18 @@ int main(void)
         NRF_LOG_INFO("Interrupt status: %x\r\n", status);
     }
 
+    uint16_t idle_acceleration_sum = 0;
+    if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
+    {
+        idle_acceleration_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]);
+        NRF_LOG_INFO("Idle:%d\r\n", idle_acceleration_sum); // display the read values
+    }
+
+    // uint16_t acc_values[ACCEL_ARRAY_SIZE];
+    uint32_t total_acc_sum = 0;
+    uint32_t acc_sum = 0;
+    uint16_t acc_index = 0;
+
     // Enter main loop.
     for (;;)
     {
@@ -701,51 +716,37 @@ int main(void)
         {
             if (mpu6050_register_read(0x3A, &status, 1))
             {
+                // NRF_LOG_WARNING("MPU6050: No status reading\r\n");
                 NRF_LOG_INFO("Interrupt status: %x\r\n", status);
             }
 
-            if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true)
+            if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
             {
+                acc_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]) - idle_acceleration_sum;
+                total_acc_sum += abs(acc_sum);
+                // acc_values[acc_index] = total_acc_sum;
+                acc_index++;
+                NRF_LOG_INFO("ACC Sum:%d, total: %d, ACC index: %d\r\n", acc_sum, total_acc_sum, acc_index); // display the read values
 
-                err_code = ble_nus_string_send(&m_nus, (uint8_t *)AccValue, sizeof(AccValue));
-                if (err_code != NRF_ERROR_INVALID_STATE)
+                if (acc_index == ACCEL_ARRAY_SIZE)
                 {
-                    APP_ERROR_CHECK(err_code);
+                    NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
+                    NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
+
+                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
+                    if (err_code != NRF_ERROR_INVALID_STATE)
+                    {
+                        APP_ERROR_CHECK(err_code);
+                    }
+                    NRF_LOG_INFO("Data sent\r\n"); // display the read values
+                    // NRF_LOG_INFO("ACC Values:%d, %d, %d\r\n", acc_value[0], acc_value[1], acc_value[2]); // display the read values
+                    total_acc_sum = 0;
+                    acc_index = 0;
                 }
-                NRF_LOG_INFO("ACC Values:%d, %d, %d\r\n", AccValue[0], AccValue[1], AccValue[2]); // display the read values
             }
             mpu_data_ready = false;
         }
     }
-    /*
-    while (true)
-    {
-        if (MPU6050_ReadAcc(&AccValue[0], &AccValue[1], &AccValue[2]) == true) // Read acc value from mpu6050 internal registers and save them in the array
-        {
-            // NRF_LOG_INFO("ACC Values:  x = %d  y = %d  z = %d", AccValue[0], AccValue[1], AccValue[2]); // display the read values
-            // printf("ACC Values:  x = %d  y = %d  z = %d\r\n", AccValue[0], AccValue[1], AccValue[2]); // display the read values
-            printf("ACC Values:%d, %d, %d, ", AccValue[0], AccValue[1], AccValue[2]); // display the read values
-        }
-        else
-        {
-            // NRF_LOG_INFO("Reading ACC values Failed!!!"); // if reading was unsuccessful then let the user know about it
-        }
-
-        if (MPU6050_ReadGyro(&GyroValue[0], &GyroValue[1], &GyroValue[2]) == true) // read the gyro values from mpu6050's internal registers and save them in another array
-        {
-            // NRF_LOG_INFO("GYRO Values: x = %d  y = %d  z = %d", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
-            // printf("GYRO Values: x = %d  y = %d  z = %d\r\n", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
-            printf("%d, %d, %d\r\n", GyroValue[0], GyroValue[1], GyroValue[2]); // display then values
-        }
-
-        else
-        {
-            // NRF_LOG_INFO("Reading GYRO values Failed!!!");
-        }
-
-        nrf_delay_ms(100); // give some delay
-    }
-    */
 }
 
 /**
