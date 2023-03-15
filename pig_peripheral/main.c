@@ -682,7 +682,7 @@ int main(void)
         // NRF_LOG_INFO("MPU_6050 initialization failed!!!"); // if it failed to initialize then print a message
         nrf_delay_ms(1000);
     }
-    mpu6050_motion_detection_init(2, 2);
+    mpu6050_motion_detection_init(5, 5);
 
     NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
     gpiote_setup();
@@ -714,10 +714,10 @@ int main(void)
 
         if (mpu_data_ready)
         {
-            if (!mpu6050_register_read(0x3A, &status, 1))
+            if (mpu6050_register_read(0x3A, &status, 1))
             {
-                NRF_LOG_WARNING("MPU6050: No status reading\r\n");
-                // NRF_LOG_INFO("Interrupt status: %x\r\n", status);
+                // NRF_LOG_WARNING("MPU6050: No status reading\r\n");
+                NRF_LOG_INFO("Interrupt status: %x\r\n", status);
             }
 
             if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
@@ -733,11 +733,12 @@ int main(void)
                     NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
                     NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
 
-                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)total_acc_sum, sizeof(total_acc_sum));
+                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
                     if (err_code != NRF_ERROR_INVALID_STATE)
                     {
                         APP_ERROR_CHECK(err_code);
                     }
+                    NRF_LOG_INFO("Data sent\r\n"); // display the read values
                     // NRF_LOG_INFO("ACC Values:%d, %d, %d\r\n", acc_value[0], acc_value[1], acc_value[2]); // display the read values
                     total_acc_sum = 0;
                     acc_index = 0;

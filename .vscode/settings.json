@@ -34,6 +34,7 @@
         "type_traits": "c",
         "utility": "c",
         "mpu60x0_register_map.h": "c",
-        "nrf_gpiote.h": "c"
+        "nrf_gpiote.h": "c",
+        "app_uart.h": "c"
     }
 }
