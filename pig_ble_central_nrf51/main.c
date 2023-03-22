@@ -228,6 +228,12 @@ void uart_event_handle(app_uart_evt_t *p_event)
 static void ble_nus_c_evt_handler(ble_nus_c_t *p_ble_nus_c, const ble_nus_c_evt_t *p_ble_nus_evt)
 {
     uint32_t err_code;
+
+    uint16_t pig_id = p_ble_nus_evt->conn_handle;
+    uint32_t pig_movement = 0;
+    const uint8_t tx_len = 16;
+    char tx_buffer[tx_len];
+
     switch (p_ble_nus_evt->evt_type)
     {
     case BLE_NUS_C_EVT_DISCOVERY_COMPLETE:
@@ -240,12 +246,22 @@ static void ble_nus_c_evt_handler(ble_nus_c_t *p_ble_nus_c, const ble_nus_c_evt_
         break;
 
     case BLE_NUS_C_EVT_NUS_RX_EVT:
-        NRF_LOG_INFO("RX_EVT\r\n");
+        pig_id = 12345;
         for (uint32_t i = 0; i < p_ble_nus_evt->data_len; i++)
         {
-            NRF_LOG_INFO("Received: %d\r\n", p_ble_nus_evt->p_data[i]);
+            uint8_t rx_byte = p_ble_nus_evt->p_data[i];
 
-            // while (app_uart_put(p_ble_nus_evt->p_data[i]) != NRF_SUCCESS);
+            pig_movement += (rx_byte << (8 * i));
+        }
+
+        snprintf(tx_buffer, tx_len, "%hi:%lu\n", pig_id, pig_movement);
+
+        uint32_t i = 0;
+        while ((i < tx_len) && (tx_buffer[i] != '\n'))
+        {
+            while (app_uart_put(tx_buffer[i]) != NRF_SUCCESS)
+                ;
+            i++;
         }
         break;
 
@@ -532,7 +548,6 @@ void bsp_event_handler(bsp_event_t event)
 
 /**@brief Function for initializing the UART.
  */
-/*
 static void uart_init(void)
 {
     uint32_t err_code;
@@ -543,7 +558,7 @@ static void uart_init(void)
             .tx_pin_no = TX_PIN_NUMBER,
             .rts_pin_no = RTS_PIN_NUMBER,
             .cts_pin_no = CTS_PIN_NUMBER,
-            .flow_control = APP_UART_FLOW_CONTROL_ENABLED,
+            .flow_control = APP_UART_FLOW_CONTROL_DISABLED,
             .use_parity = false,
             .baud_rate = UART_BAUDRATE_BAUDRATE_Baud115200};
 
@@ -556,7 +571,6 @@ static void uart_init(void)
 
     APP_ERROR_CHECK(err_code);
 }
-*/
 
 /**@brief Function for initializing the NUS Client.
  */
@@ -605,12 +619,14 @@ static void power_manage(void)
 int main(void)
 {
 
-    APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
+    // APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_INFO("Log init\r\n");
 
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
-    // uart_init();
+    uart_init();
+    NRF_LOG_INFO("Uart init\r\n");
+
     buttons_leds_init();
     db_discovery_init();
     ble_stack_init();
