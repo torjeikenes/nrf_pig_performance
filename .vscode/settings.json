@@ -35,6 +35,8 @@
         "utility": "c",
         "mpu60x0_register_map.h": "c",
         "nrf_gpiote.h": "c",
-        "app_uart.h": "c"
+        "app_uart.h": "c",
+        "app_simple_timer.h": "c",
+        "nrf_drv_timer.h": "c"
     }
 }
