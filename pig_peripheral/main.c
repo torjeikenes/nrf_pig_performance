@@ -71,6 +71,8 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 
+#include "nrf_drv_timer.h"
+
 #include "mpu6050_dvr.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0 /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
@@ -116,6 +118,10 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID; /**< Handle of the curr
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_NUS_SERVICE, NUS_SERVICE_UUID_TYPE}}; /**< Universally unique service identifier. */
 
 volatile bool mpu_data_ready = false;
+
+const nrf_drv_timer_t TIMER_LED = NRF_DRV_TIMER_INSTANCE(0);
+
+volatile bool timer_ready = false;
 
 /**@brief Function for assert macro callback.
  *
@@ -569,6 +575,24 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
+/**
+ * @brief Handler for timer events.
+ */
+void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context)
+{
+
+    switch (event_type)
+    {
+    case NRF_TIMER_EVENT_COMPARE0:
+        timer_ready = true;
+        break;
+
+    default:
+        // Do nothing.
+        break;
+    }
+}
+
 /**@brief Application main function.
  */
 int main(void)
@@ -576,8 +600,23 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
+    uint32_t time_ms = 500; // Time(in miliseconds) between consecutive compare events.
+    uint32_t time_ticks;
+
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_INFO("Log init\r\n");
+
+    // Configure TIMER_LED for generating simple light effect - leds on board will invert his state one after the other.
+    nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
+    err_code = nrf_drv_timer_init(&TIMER_LED, &timer_cfg, timer_led_event_handler);
+    APP_ERROR_CHECK(err_code);
+
+    time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_LED, time_ms);
+
+    nrf_drv_timer_extended_compare(
+        &TIMER_LED, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
+
+    nrf_drv_timer_enable(&TIMER_LED);
 
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
@@ -650,22 +689,40 @@ int main(void)
                 acc_index++;
                 NRF_LOG_INFO("ACC Sum:%d, total: %d, ACC index: %d\r\n", acc_sum, total_acc_sum, acc_index); // display the read values
 
-                if (acc_index == ACCEL_ARRAY_SIZE)
-                {
-                    NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
-                    NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
+                /*
+                                if (acc_index == ACCEL_ARRAY_SIZE)
+                                {
+                                    NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
+                                    NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
 
-                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
-                    if (err_code != NRF_ERROR_INVALID_STATE)
-                    {
-                        APP_ERROR_CHECK(err_code);
-                    }
-                    NRF_LOG_INFO("Data sent\r\n"); // display the read values
-                    total_acc_sum = 0;
-                    acc_index = 0;
-                }
+                                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
+                                    if (err_code != NRF_ERROR_INVALID_STATE)
+                                    {
+                                        APP_ERROR_CHECK(err_code);
+                                    }
+                                    NRF_LOG_INFO("Data sent\r\n"); // display the read values
+                                    total_acc_sum = 0;
+                                    acc_index = 0;
+                                }
+                */
             }
             mpu_data_ready = false;
+        }
+        if (timer_ready)
+        {
+            NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
+            NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
+
+            // TODO send a float instead of int
+            err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
+            if (err_code != NRF_ERROR_INVALID_STATE)
+            {
+                APP_ERROR_CHECK(err_code);
+            }
+            NRF_LOG_INFO("Data sent\r\n"); // display the read values
+            total_acc_sum = 0;
+            acc_index = 0;
+            timer_ready = false;
         }
     }
 }
