@@ -46,6 +46,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c \
   $(PROJ_DIR)/mpu6050/mpu6050_dvr.c \
   $(SDK_ROOT)/components/drivers_nrf/twi_master/nrf_drv_twi.c \
+  $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -153,6 +154,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/log/src \
   $(PROJ_DIR)/mpu6050 \
   $(SDK_ROOT)/components/drivers_nrf/twi_master \
+  $(SDK_ROOT)/components/drivers_nrf/timer \
 
 # Libraries common to all targets
 LIB_FILES += \
