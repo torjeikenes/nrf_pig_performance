@@ -600,7 +600,7 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
-    uint32_t time_ms = 500; // Time(in miliseconds) between consecutive compare events.
+    uint32_t time_ms = 10000; // Time(in miliseconds) between consecutive compare events.
     uint32_t time_ticks;
 
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
@@ -623,12 +623,12 @@ int main(void)
     // uart_init();
 
     buttons_leds_init(&erase_bonds);
+    NRF_LOG_INFO("Test!\r\n");
     ble_stack_init();
     gap_params_init();
     services_init();
     advertising_init();
     conn_params_init();
-    NRF_LOG_INFO("Test!\r\n");
 
     NRF_LOG_INFO("UART Start!\r\n");
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
@@ -710,7 +710,6 @@ int main(void)
         }
         if (timer_ready)
         {
-            NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
             NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
 
             // TODO send a float instead of int
