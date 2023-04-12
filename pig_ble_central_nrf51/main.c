@@ -230,8 +230,8 @@ static void ble_nus_c_evt_handler(ble_nus_c_t *p_ble_nus_c, const ble_nus_c_evt_
     uint32_t err_code;
 
     uint16_t pig_id = p_ble_nus_evt->conn_handle;
-    uint32_t pig_movement = 0;
-    const uint8_t tx_len = 16;
+    //uint32_t pig_movement = 0;
+    const uint8_t tx_len = sizeof(uint16_t) + sizeof(uint32_t);
     char tx_buffer[tx_len];
 
     switch (p_ble_nus_evt->evt_type)
@@ -247,17 +247,24 @@ static void ble_nus_c_evt_handler(ble_nus_c_t *p_ble_nus_c, const ble_nus_c_evt_
 
     case BLE_NUS_C_EVT_NUS_RX_EVT:
         pig_id = 12345;
+
+/*
         for (uint32_t i = 0; i < p_ble_nus_evt->data_len; i++)
         {
             uint8_t rx_byte = p_ble_nus_evt->p_data[i];
 
             pig_movement += (rx_byte << (8 * i));
         }
+*/
 
-        snprintf(tx_buffer, tx_len, "%hi:%lu\n", pig_id, pig_movement);
+        memcpy(tx_buffer + 0, &pig_id, sizeof(uint16_t));
+        memcpy(tx_buffer + sizeof(uint16_t), p_ble_nus_evt->p_data, p_ble_nus_evt->data_len);
+        NRF_LOG_INFO("%x%x%x%x%x%x",tx_buffer[0],tx_buffer[1],tx_buffer[2],tx_buffer[3],tx_buffer[4],tx_buffer[5])
+
+        // snprintf(tx_buffer, tx_len, "%hi:%lu\n", pig_id, pig_movement);
 
         uint32_t i = 0;
-        while ((i < tx_len) && (tx_buffer[i] != '\n'))
+        while ((i < tx_len))
         {
             while (app_uart_put(tx_buffer[i]) != NRF_SUCCESS)
                 ;
