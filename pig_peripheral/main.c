@@ -626,7 +626,6 @@ int main(void)
         NRF_LOG_INFO("Idle:%d\r\n", idle_acceleration_sum); // display the read values
     }
 
-    // uint16_t acc_values[ACCEL_ARRAY_SIZE];
     uint32_t total_acc_sum = 0;
     uint32_t acc_sum = 0;
     uint16_t acc_index = 0;
@@ -653,7 +652,7 @@ int main(void)
                 if (acc_index == ACCEL_ARRAY_SIZE)
                 {
                     NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
-                    NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
+                    NRF_LOG_INFO("SENDING ACC Sum:%x\r\n", total_acc_sum);          // display the read values
 
                     err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
                     if (err_code != NRF_ERROR_INVALID_STATE)
