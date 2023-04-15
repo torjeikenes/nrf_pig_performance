@@ -606,12 +606,12 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
     buttons_leds_init(&erase_bonds);
+    NRF_LOG_INFO("Test!\r\n");
     ble_stack_init();
     gap_params_init();
     services_init();
     advertising_init();
     conn_params_init();
-    NRF_LOG_INFO("Test!\r\n");
 
     NRF_LOG_INFO("UART Start!\r\n");
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
@@ -693,8 +693,7 @@ int main(void)
         }
         if (timer_ready)
         {
-            NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
-            NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);          // display the read values
+            NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum); // display the read values
 
             // TODO send a float instead of int
             err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
