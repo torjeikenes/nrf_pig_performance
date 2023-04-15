@@ -37,6 +37,9 @@
         "nrf_gpiote.h": "c",
         "app_uart.h": "c",
         "app_simple_timer.h": "c",
-        "nrf_drv_timer.h": "c"
+        "nrf_drv_timer.h": "c",
+        "bsp.h": "c",
+        "ble_hci.h": "c",
+        "ble_advdata.h": "c"
     }
 }

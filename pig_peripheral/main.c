@@ -71,7 +71,7 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 
-#include "nrf_drv_timer.h"
+#include "nrf_drv_clock.h"
 
 #include "mpu6050_dvr.h"
 
@@ -110,6 +110,8 @@
 
 #define MPU_INT_PIN 12
 
+#define SEND_INTERVAL APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER)
+
 #define ACCEL_ARRAY_SIZE 100
 
 static ble_nus_t m_nus;                                  /**< Structure to identify the Nordic UART Service. */
@@ -119,7 +121,7 @@ static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_NUS_SERVICE, NUS_SERVICE_UUID_TYPE}
 
 volatile bool mpu_data_ready = false;
 
-const nrf_drv_timer_t TIMER_LED = NRF_DRV_TIMER_INSTANCE(0);
+APP_TIMER_DEF(m_app_timer_id);
 
 volatile bool timer_ready = false;
 
@@ -575,22 +577,9 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
-/**
- * @brief Handler for timer events.
- */
-void timer_led_event_handler(nrf_timer_event_t event_type, void *p_context)
+static void app_timer_handler(void *p_context)
 {
-
-    switch (event_type)
-    {
-    case NRF_TIMER_EVENT_COMPARE0:
-        timer_ready = true;
-        break;
-
-    default:
-        // Do nothing.
-        break;
-    }
+    timer_ready = true;
 }
 
 /**@brief Application main function.
@@ -600,27 +589,21 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
-    uint32_t time_ms = 500; // Time(in miliseconds) between consecutive compare events.
-    uint32_t time_ticks;
-
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_INFO("Log init\r\n");
-
-    // Configure TIMER_LED for generating simple light effect - leds on board will invert his state one after the other.
-    nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
-    err_code = nrf_drv_timer_init(&TIMER_LED, &timer_cfg, timer_led_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_LED, time_ms);
-
-    nrf_drv_timer_extended_compare(
-        &TIMER_LED, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
-
-    nrf_drv_timer_enable(&TIMER_LED);
 
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
     // uart_init();
+
+    // err_code = app_timer_init();
+    // APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, app_timer_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_app_timer_id, SEND_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
 
     buttons_leds_init(&erase_bonds);
     ble_stack_init();
