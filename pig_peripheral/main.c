@@ -109,8 +109,8 @@
 #define UART_RX_BUF_SIZE 256 /**< UART RX buffer size. */
 
 #define MPU_INT_PIN 12
-#define MPU_INT_THRESHOLD 2 // Acceleration threshold before interrupt triggers
-#define MPU_INT_DURATION 2  // Duration of motion before interrupt triggers
+#define MPU_INT_THRESHOLD 3 // Acceleration threshold before interrupt triggers
+#define MPU_INT_DURATION 3  // Duration of motion before interrupt triggers
 
 #define SEND_INTERVAL_MS 60000 // Interval between sending of data to hub
 #define SEND_INTERVAL APP_TIMER_TICKS(SEND_INTERVAL_MS, APP_TIMER_PRESCALER)
