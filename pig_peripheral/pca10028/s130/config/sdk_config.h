@@ -347,7 +347,7 @@
 // <e> CLOCK_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef CLOCK_CONFIG_LOG_ENABLED
-#define CLOCK_CONFIG_LOG_ENABLED 0
+#define CLOCK_CONFIG_LOG_ENABLED 1
 #endif
 #if CLOCK_CONFIG_LOG_ENABLED
 // <o> CLOCK_CONFIG_LOG_LEVEL  - Default Severity level
@@ -2163,7 +2163,7 @@
 // <e> TIMER_ENABLED - nrf_drv_timer - TIMER periperal driver
 //==========================================================
 #ifndef TIMER_ENABLED
-#define TIMER_ENABLED 1
+#define TIMER_ENABLED 0
 #endif
 #if TIMER_ENABLED
 // <o> TIMER_DEFAULT_CONFIG_FREQUENCY  - Timer frequency if in Timer mode
@@ -2879,7 +2879,7 @@
 // <i> This option can be used when app_timer is used for timestamping.
 
 #ifndef APP_TIMER_KEEPS_RTC_ACTIVE
-#define APP_TIMER_KEEPS_RTC_ACTIVE 0
+#define APP_TIMER_KEEPS_RTC_ACTIVE 1
 #endif
 
 #endif // APP_TIMER_ENABLED
