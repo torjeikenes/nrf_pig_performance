@@ -628,7 +628,7 @@ int main(void)
         // NRF_LOG_INFO("MPU_6050 initialization failed!!!"); // if it failed to initialize then print a message
         nrf_delay_ms(1000);
     }
-    mpu6050_motion_detection_init(5, 5);
+    mpu6050_motion_detection_init(2, 2);
 
     NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
     gpiote_setup();
