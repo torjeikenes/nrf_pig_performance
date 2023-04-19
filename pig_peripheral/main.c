@@ -71,6 +71,8 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 
+#include "nrf_drv_clock.h"
+
 #include "mpu6050_dvr.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0 /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
@@ -107,6 +109,11 @@
 #define UART_RX_BUF_SIZE 256 /**< UART RX buffer size. */
 
 #define MPU_INT_PIN 12
+#define MPU_INT_THRESHOLD 3 // Acceleration threshold before interrupt triggers
+#define MPU_INT_DURATION 3  // Duration of motion before interrupt triggers
+
+#define SEND_INTERVAL_MS 60000 // Interval between sending of data to hub
+#define SEND_INTERVAL APP_TIMER_TICKS(SEND_INTERVAL_MS, APP_TIMER_PRESCALER)
 
 #define ACCEL_ARRAY_SIZE 100
 
@@ -116,6 +123,10 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID; /**< Handle of the curr
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_NUS_SERVICE, NUS_SERVICE_UUID_TYPE}}; /**< Universally unique service identifier. */
 
 volatile bool mpu_data_ready = false;
+
+APP_TIMER_DEF(m_app_timer_id);
+
+volatile bool timer_ready = false;
 
 /**@brief Function for assert macro callback.
  *
@@ -569,6 +580,75 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
+/**@brief Handler for send_timer events.
+ */
+static void send_timer_handler(void *p_context)
+{
+    timer_ready = true;
+}
+
+static void timer_init(void)
+{
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
+
+    uint32_t err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, send_timer_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_app_timer_id, SEND_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+}
+
+static void accel_init(uint16_t *idle_acceleration_sum)
+{
+    // create arrays which will hold x,y & z co-ordinates values of acc and gyro
+    static int16_t acc_value[3];
+
+    nrf_delay_ms(1000);
+
+    while (mpu6050_init() == false) // wait until MPU6050 sensor is successfully initialized
+    {
+        nrf_delay_ms(1000);
+    }
+
+    mpu6050_motion_detection_init(MPU_INT_THRESHOLD, MPU_INT_DURATION);
+
+    NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
+    nrf_delay_ms(100);
+    NRF_LOG_INFO("Reading Values from ACC & GYRO\r\n");
+
+    uint8_t status;
+    if (mpu6050_register_read(0x3A, &status, 1))
+    {
+        NRF_LOG_INFO("Interrupt status: %x\r\n", status);
+    }
+
+    // Calibrate the idle acceleration
+    if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
+    {
+        *idle_acceleration_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]);
+        NRF_LOG_INFO("Idle:%d\r\n", *idle_acceleration_sum);
+    }
+}
+
+static void read_accel(uint16_t idle_acceleration_sum, uint32_t *total_acc_sum)
+{
+    static uint8_t status;
+    static int16_t acc_value[3];
+    static uint16_t acc_sum;
+
+    if (mpu6050_register_read(0x3A, &status, 1))
+    {
+        NRF_LOG_INFO("Interrupt status: %x\r\n", status);
+    }
+
+    if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
+    {
+        acc_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]) - idle_acceleration_sum;
+        *total_acc_sum += abs(acc_sum);
+        NRF_LOG_INFO("ACC Sum:%d, total: %d\r\n", acc_sum, *total_acc_sum); // display the read values
+    }
+}
+
 /**@brief Application main function.
  */
 int main(void)
@@ -579,92 +659,46 @@ int main(void)
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_INFO("Log init\r\n");
 
-    // Initialize.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
-    // uart_init();
-
+    timer_init();
     buttons_leds_init(&erase_bonds);
     ble_stack_init();
     gap_params_init();
     services_init();
     advertising_init();
     conn_params_init();
-    NRF_LOG_INFO("Test!\r\n");
+    twi_master_init();
+    gpiote_setup();
 
-    NRF_LOG_INFO("UART Start!\r\n");
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
-    // create arrays which will hold x,y & z co-ordinates values of acc and gyro
-    static int16_t acc_value[3]; //, GyroValue[3];
-
-    twi_master_init();  // initialize the twi
-    nrf_delay_ms(1000); // give some delay
-
-    while (mpu6050_init() == false) // wait until MPU6050 sensor is successfully initialized
-    {
-        // NRF_LOG_INFO("MPU_6050 initialization failed!!!"); // if it failed to initialize then print a message
-        nrf_delay_ms(1000);
-    }
-    mpu6050_motion_detection_init(5, 5);
-
-    NRF_LOG_INFO("MPU6050 Init Successfully!!!\r\n");
-    gpiote_setup();
-
-    NRF_LOG_INFO("Reading Values from ACC & GYRO\r\n"); // display a message to let the user know that the device is starting to read the values
-    // nrf_delay_ms(2000);
-    uint8_t status;
-    if (mpu6050_register_read(0x3A, &status, 1))
-    {
-        NRF_LOG_INFO("Interrupt status: %x\r\n", status);
-    }
-
     uint16_t idle_acceleration_sum = 0;
-    if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
-    {
-        idle_acceleration_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]);
-        NRF_LOG_INFO("Idle:%d\r\n", idle_acceleration_sum); // display the read values
-    }
+    accel_init(&idle_acceleration_sum);
 
     uint32_t total_acc_sum = 0;
-    uint32_t acc_sum = 0;
-    uint16_t acc_index = 0;
 
-    // Enter main loop.
     for (;;)
     {
         power_manage();
 
         if (mpu_data_ready)
         {
-            if (mpu6050_register_read(0x3A, &status, 1))
-            {
-                NRF_LOG_INFO("Interrupt status: %x\r\n", status);
-            }
-
-            if (MPU6050_ReadAcc(&acc_value[0], &acc_value[1], &acc_value[2]) == true)
-            {
-                acc_sum = abs(acc_value[0]) + abs(acc_value[1]) + abs(acc_value[2]) - idle_acceleration_sum;
-                total_acc_sum += abs(acc_sum);
-                acc_index++;
-                NRF_LOG_INFO("ACC Sum:%d, total: %d, ACC index: %d\r\n", acc_sum, total_acc_sum, acc_index); // display the read values
-
-                if (acc_index == ACCEL_ARRAY_SIZE)
-                {
-                    NRF_LOG_INFO("i:%d, size:%d\r\n", acc_index, ACCEL_ARRAY_SIZE); // display the read values
-                    NRF_LOG_INFO("SENDING ACC Sum:%x\r\n", total_acc_sum);          // display the read values
-
-                    err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
-                    if (err_code != NRF_ERROR_INVALID_STATE)
-                    {
-                        APP_ERROR_CHECK(err_code);
-                    }
-                    NRF_LOG_INFO("Data sent\r\n"); // display the read values
-                    total_acc_sum = 0;
-                    acc_index = 0;
-                }
-            }
+            read_accel(idle_acceleration_sum, &total_acc_sum);
             mpu_data_ready = false;
+        }
+        if (timer_ready)
+        {
+            // Send data to hub
+            NRF_LOG_INFO("SENDING ACC Sum:%d\r\n", total_acc_sum);
+
+            err_code = ble_nus_string_send(&m_nus, (uint8_t *)(&total_acc_sum), sizeof(total_acc_sum));
+            if (err_code != NRF_ERROR_INVALID_STATE)
+            {
+                APP_ERROR_CHECK(err_code);
+            }
+            NRF_LOG_INFO("Data sent\r\n");
+            total_acc_sum = 0;
+            timer_ready = false;
         }
     }
 }
