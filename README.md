@@ -1,5 +1,10 @@
 # NRF Pig Performance
 
+An activity tracker for pigs consisting of a BLE earchip for each pig, and a sentral that gathers data from each pig over BLE and sends it to the backend over NB-IoT.
+
+Link to code for website: https://github.com/alfhj/pig-performance
+
+
 ## Setup
 
 Download nrf5 SDK v. 12.3.0 into the root folder of the repo
